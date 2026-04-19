@@ -1,4 +1,4 @@
-// Copyright 2024 <Your Name>
+// Copyright 2024
 
 #include "alg.h"
 
@@ -26,21 +26,20 @@ int countPairs2(int *arr, int len, int value) {
                 int n = right - left + 1;
                 count += n * (n - 1) / 2;
                 break;
-            } else {
-                int leftVal = arr[left];
-                int leftCount = 0;
-                while (left <= right && arr[left] == leftVal) {
-                    leftCount++;
-                    left++;
-                }
-                int rightVal = arr[right];
-                int rightCount = 0;
-                while (right >= left && arr[right] == rightVal) {
-                    rightCount++;
-                    right--;
-                }
-                count += leftCount * rightCount;
             }
+            int leftVal = arr[left];
+            int leftCount = 1;
+            while (left + leftCount <= right && arr[left + leftCount] == leftVal) {
+                leftCount++;
+            }
+            int rightVal = arr[right];
+            int rightCount = 1;
+            while (right - rightCount >= left && arr[right - rightCount] == rightVal) {
+                rightCount++;
+            }
+            count += leftCount * rightCount;
+            left += leftCount;
+            right -= rightCount;
         } else if (sum < value) {
             left++;
         } else {
@@ -56,7 +55,6 @@ int binarySearchCount(int *arr, int start, int end, int target) {
     int left = start;
     int right = end;
     int firstIndex = -1;
-    int lastIndex = -1;
 
     while (left <= right) {
         int mid = left + (right - left) / 2;
@@ -74,6 +72,7 @@ int binarySearchCount(int *arr, int start, int end, int target) {
 
     left = firstIndex;
     right = end;
+    int lastIndex = firstIndex;
 
     while (left <= right) {
         int mid = left + (right - left) / 2;
@@ -94,6 +93,9 @@ int countPairs3(int *arr, int len, int value) {
     int count = 0;
     for (int i = 0; i < len; i++) {
         int target = value - arr[i];
+        if (target < arr[i]) {
+            continue;
+        }
         int foundCount = binarySearchCount(arr, i + 1, len - 1, target);
         count += foundCount;
     }

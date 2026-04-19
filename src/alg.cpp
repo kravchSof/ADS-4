@@ -1,7 +1,8 @@
+// Copyright 2024
+
 #include "alg.h"
 
-int countPairs1(int *arr, int len, int value)
-{
+int countPairs1(int *arr, int len, int value) {
     int count = 0;
 
     for (int i = 0; i < len; i++) {
@@ -15,8 +16,7 @@ int countPairs1(int *arr, int len, int value)
     return count;
 }
 
-int countPairs2(int *arr, int len, int value)
-{
+int countPairs2(int *arr, int len, int value) {
     int count = 0;
     int left = 0;
     int right = len - 1;
@@ -61,8 +61,7 @@ int countPairs2(int *arr, int len, int value)
     return count;
 }
 
-int binarySearchCount(int *arr, int start, int end, int target)
-{
+int binarySearchCount(int *arr, int start, int end, int target) {
     if (start > end) return 0;
 
     int left = start;
@@ -102,8 +101,7 @@ int binarySearchCount(int *arr, int start, int end, int target)
     return lastIndex - firstIndex + 1;
 }
 
-int countPairs3(int *arr, int len, int value)
-{
+int countPairs3(int *arr, int len, int value) {
     int count = 0;
 
     for (int i = 0; i < len; i++) {

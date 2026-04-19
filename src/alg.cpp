@@ -1,103 +1,88 @@
-// Copyright 2024
+// Copyright 2021 NNTU-CS
 
-#include "alg.h"
+#include <utility>
+
+void QuickSort(int arr[], int p, int r) {
+  int i, j;
+  int x;
+  i = p;
+  j = r;
+  x = arr[(i + j) / 2];
+  do {
+    while (arr[i] < x) i++;
+    while (arr[j] > x) j--;
+    if (i <= j) {
+      std::swap(arr[i], arr[j]);
+      i++;
+      j--;
+    }
+  } while (i <= j);
+  if (j > p) QuickSort(arr, p, j);
+  if (i < r) QuickSort(arr, i, r);
+}
 
 int countPairs1(int *arr, int len, int value) {
-    int count = 0;
-    for (int i = 0; i < len; i++) {
-        for (int j = i + 1; j < len; j++) {
-            if (arr[i] + arr[j] == value) {
-                count++;
-            }
-        }
+  int res = 0;
+  for (int i = 0; i < len; i++) {
+    for (int j = 0; j < len; j++) {
+      if (i != j && arr[i] + arr[j] == value) {
+        res++;
+      }
     }
-    return count;
+  }
+  return res / 2;
 }
-
 int countPairs2(int *arr, int len, int value) {
-    int count = 0;
-    int left = 0;
-    int right = len - 1;
-
-    while (left < right) {
-        int sum = arr[left] + arr[right];
-        if (sum == value) {
-            if (arr[left] == arr[right]) {
-                int n = right - left + 1;
-                count += n * (n - 1) / 2;
-                break;
-            }
-            int leftVal = arr[left];
-            int leftCount = 1;
-            while (left + leftCount <= right && arr[left + leftCount] == leftVal) {
-                leftCount++;
-            }
-            int rightVal = arr[right];
-            int rightCount = 1;
-            while (right - rightCount >= left && arr[right - rightCount] == rightVal) {
-                rightCount++;
-            }
-            count += leftCount * rightCount;
-            left += leftCount;
-            right -= rightCount;
-        } else if (sum < value) {
-            left++;
-        } else {
-            right--;
-        }
+  int res = 0;
+  QuickSort(arr, 0, len - 1);
+  for (int i = 0; i < len; i++) {
+    for (int j = len - 1; j > i; j--) {
+      if (arr[j] + arr[i] < value) break;
+      if (arr[i] + arr[j] == value) {
+        res++;
+      }
     }
-    return count;
+  }
+  return res;
 }
-
-int binarySearchCount(int *arr, int start, int end, int target) {
-    if (start > end) return 0;
-
-    int left = start;
-    int right = end;
-    int firstIndex = -1;
-
-    while (left <= right) {
-        int mid = left + (right - left) / 2;
-        if (arr[mid] == target) {
-            firstIndex = mid;
-            right = mid - 1;
-        } else if (arr[mid] < target) {
-            left = mid + 1;
-        } else {
-            right = mid - 1;
-        }
-    }
-
-    if (firstIndex == -1) return 0;
-
-    left = firstIndex;
-    right = end;
-    int lastIndex = firstIndex;
-
-    while (left <= right) {
-        int mid = left + (right - left) / 2;
-        if (arr[mid] == target) {
-            lastIndex = mid;
-            left = mid + 1;
-        } else if (arr[mid] < target) {
-            left = mid + 1;
-        } else {
-            right = mid - 1;
-        }
-    }
-
-    return lastIndex - firstIndex + 1;
-}
-
 int countPairs3(int *arr, int len, int value) {
-    int count = 0;
-    for (int i = 0; i < len; i++) {
-        int target = value - arr[i];
-        if (target < arr[i]) {
-            continue;
-        }
-        int foundCount = binarySearchCount(arr, i + 1, len - 1, target);
-        count += foundCount;
+  int res = 0;
+  QuickSort(arr, 0, len - 1);
+
+  for (int i = 0; i < len; i++) {
+    int target = value - arr[i];
+    int l = i + 1;
+    int r = len - 1;
+
+    int leftr = -1;
+    while (l <= r) {
+      int x = (l + r) / 2;
+      if (arr[x] == target) {
+        leftr = x;
+        r = x - 1;
+      } else if (arr[x] < target) {
+        l = x + 1;
+      } else {
+        r = x - 1;
+      }
     }
-    return count;
+    if (leftr == -1) continue;
+
+    int rightr = -1;
+    l = i + 1;
+    r = len - 1;
+    while (l <= r) {
+      int x = (l + r) / 2;
+      if (arr[x] == target) {
+        rightr = x;
+        l = x + 1;
+      } else if (arr[x] < target) {
+        l = x + 1;
+      } else {
+        r = x - 1;
+      }
+    }
+    res += (rightr - leftr + 1);
+  }
+  return res;
 }

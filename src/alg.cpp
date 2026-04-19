@@ -1,10 +1,9 @@
-// Copyright 2024
+// Copyright 2024 <Your Name>
 
 #include "alg.h"
 
 int countPairs1(int *arr, int len, int value) {
     int count = 0;
-
     for (int i = 0; i < len; i++) {
         for (int j = i + 1; j < len; j++) {
             if (arr[i] + arr[j] == value) {
@@ -12,7 +11,6 @@ int countPairs1(int *arr, int len, int value) {
             }
         }
     }
-
     return count;
 }
 
@@ -23,33 +21,25 @@ int countPairs2(int *arr, int len, int value) {
 
     while (left < right) {
         int sum = arr[left] + arr[right];
-
         if (sum == value) {
-            int leftVal = arr[left];
-            int rightVal = arr[right];
-
-            if (leftVal == rightVal) {
+            if (arr[left] == arr[right]) {
                 int n = right - left + 1;
                 count += n * (n - 1) / 2;
                 break;
             } else {
+                int leftVal = arr[left];
                 int leftCount = 0;
-                int tempLeft = left;
-                while (tempLeft <= right && arr[tempLeft] == leftVal) {
+                while (left <= right && arr[left] == leftVal) {
                     leftCount++;
-                    tempLeft++;
+                    left++;
                 }
-
+                int rightVal = arr[right];
                 int rightCount = 0;
-                int tempRight = right;
-                while (tempRight >= left && arr[tempRight] == rightVal) {
+                while (right >= left && arr[right] == rightVal) {
                     rightCount++;
-                    tempRight--;
+                    right--;
                 }
-
                 count += leftCount * rightCount;
-                left = tempLeft;
-                right = tempRight;
             }
         } else if (sum < value) {
             left++;
@@ -57,7 +47,6 @@ int countPairs2(int *arr, int len, int value) {
             right--;
         }
     }
-
     return count;
 }
 
@@ -103,12 +92,10 @@ int binarySearchCount(int *arr, int start, int end, int target) {
 
 int countPairs3(int *arr, int len, int value) {
     int count = 0;
-
     for (int i = 0; i < len; i++) {
         int target = value - arr[i];
         int foundCount = binarySearchCount(arr, i + 1, len - 1, target);
         count += foundCount;
     }
-
     return count;
 }
